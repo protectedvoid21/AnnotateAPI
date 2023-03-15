@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33403.182
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnnotateAPI", "AnnotateAPI\AnnotateAPI.csproj", "{300E1E56-2638-4FC9-ADA9-410D1B57880C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{300E1E56-2638-4FC9-ADA9-410D1B57880C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{300E1E56-2638-4FC9-ADA9-410D1B57880C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{300E1E56-2638-4FC9-ADA9-410D1B57880C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{300E1E56-2638-4FC9-ADA9-410D1B57880C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8CAD4C55-D196-4832-AB65-10E4BDAB9E57}
+	EndGlobalSection
+EndGlobal
