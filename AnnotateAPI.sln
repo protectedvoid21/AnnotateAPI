@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnnotateAPI", "AnnotateAPI\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Services.csproj", "{20C39594-157B-4F3E-884C-B8E793151027}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "Data\Data.csproj", "{73C2C0F8-3490-44D9-AEB4-A2A04D358522}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{20C39594-157B-4F3E-884C-B8E793151027}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20C39594-157B-4F3E-884C-B8E793151027}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20C39594-157B-4F3E-884C-B8E793151027}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73C2C0F8-3490-44D9-AEB4-A2A04D358522}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73C2C0F8-3490-44D9-AEB4-A2A04D358522}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73C2C0F8-3490-44D9-AEB4-A2A04D358522}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73C2C0F8-3490-44D9-AEB4-A2A04D358522}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,7 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using NetTopologySuite.Geometries;
+﻿using NetTopologySuite.Geometries;
 
-namespace AnnotateAPI.Models;
+namespace Data.Models;
 
 public class Annotation {
     public int Id { get; set; }

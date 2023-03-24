@@ -1,4 +1,4 @@
-﻿namespace AnnotateAPI.Models; 
+﻿namespace Data.Models; 
 
 public class Picture {
     public int Id { get; set; }
