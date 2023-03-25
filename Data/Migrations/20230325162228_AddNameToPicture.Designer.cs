@@ -6,15 +6,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using NetTopologySuite.Geometries;
 
 #nullable disable
 
-namespace AnnotateAPI.Migrations
+namespace Data.Migrations
 {
     [DbContext(typeof(AnnotateDbContext))]
-    [Migration("20230324073358_AddPictureId")]
-    partial class AddPictureId
+    [Migration("20230325162228_AddNameToPicture")]
+    partial class AddNameToPicture
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,10 +43,6 @@ namespace AnnotateAPI.Migrations
 
                     b.Property<int>("PictureId")
                         .HasColumnType("int");
-
-                    b.Property<Polygon>("Polygon")
-                        .IsRequired()
-                        .HasColumnType("geography");
 
                     b.HasKey("Id");
 
@@ -140,6 +135,30 @@ namespace AnnotateAPI.Migrations
                     b.ToTable("BodyPartTypes");
                 });
 
+            modelBuilder.Entity("Data.Models.Coordinate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AnnotationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("X")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Y")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AnnotationId");
+
+                    b.ToTable("Coordinates");
+                });
+
             modelBuilder.Entity("Data.Models.Picture", b =>
                 {
                     b.Property<int>("Id")
@@ -150,6 +169,10 @@ namespace AnnotateAPI.Migrations
 
                     b.Property<int>("BodyPartTypeId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -310,6 +333,17 @@ namespace AnnotateAPI.Migrations
                     b.Navigation("Picture");
                 });
 
+            modelBuilder.Entity("Data.Models.Coordinate", b =>
+                {
+                    b.HasOne("Data.Models.Annotation", "Annotation")
+                        .WithMany("Coordinates")
+                        .HasForeignKey("AnnotationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Annotation");
+                });
+
             modelBuilder.Entity("Data.Models.Picture", b =>
                 {
                     b.HasOne("Data.Models.BodyPartType", "BodyPartType")
@@ -370,6 +404,11 @@ namespace AnnotateAPI.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Data.Models.Annotation", b =>
+                {
+                    b.Navigation("Coordinates");
                 });
 #pragma warning restore 612, 618
         }

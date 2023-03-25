@@ -21,6 +21,6 @@ public class AnnotationController : ControllerBase {
 
     [HttpPost(Name = "Add")]
     public async Task Add([FromBody] AnnotationDto annotationDto) {
-        await annotationService.AddAsync(annotationDto.AuthorId, annotationDto.Description, annotationDto.Coordinates);
+        await annotationService.AddAsync(annotationDto.AuthorId, annotationDto.PictureId, annotationDto.Description, annotationDto.Coordinates);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using AnnotateAPI;
 using Data.Models;
-using NetTopologySuite.Geometries;
 
 namespace Services.Annotations; 
 
@@ -11,14 +10,18 @@ public class AnnotationService : IAnnotationService {
         this.dbContext = dbContext;
     }
 
-    public async Task AddAsync(string authorId, string description, IEnumerable<Tuple<int, int>> coordinates) {
-        LinearRing ring = new(coordinates.Select(c => new Coordinate(c.Item1, c.Item2)).ToArray());
-        
+    public async Task AddAsync(string authorId, int pictureId, string description, IEnumerable<Tuple<int, int>> coordinates) {
         Annotation annotation = new() {
             AuthorId = authorId,
+            PictureId = pictureId,
             Description = description,
-            Polygon = new Polygon(ring)
         };
+
+        annotation.Coordinates = coordinates.Select(c => new Coordinate {
+            Annotation = annotation,
+            X = c.Item1,
+            Y = c.Item2,
+        }).ToList();
 
         await dbContext.AddAsync(annotation);
         await dbContext.SaveChangesAsync();

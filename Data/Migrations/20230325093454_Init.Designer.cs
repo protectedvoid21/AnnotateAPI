@@ -6,15 +6,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using NetTopologySuite.Geometries;
 
 #nullable disable
 
-namespace AnnotateAPI.Migrations
+namespace Data.Migrations
 {
     [DbContext(typeof(AnnotateDbContext))]
-    [Migration("20230318140841_init")]
-    partial class init
+    [Migration("20230325093454_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,7 +25,7 @@ namespace AnnotateAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("AnnotateAPI.Models.Annotation", b =>
+            modelBuilder.Entity("Data.Models.Annotation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -35,24 +34,26 @@ namespace AnnotateAPI.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AuthorId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Polygon>("Polygon")
-                        .IsRequired()
-                        .HasColumnType("geography");
+                    b.Property<int>("PictureId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AuthorId");
 
+                    b.HasIndex("PictureId");
+
                     b.ToTable("Annotations");
                 });
 
-            modelBuilder.Entity("AnnotateAPI.Models.AppUser", b =>
+            modelBuilder.Entity("Data.Models.AppUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -117,7 +118,7 @@ namespace AnnotateAPI.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("AnnotateAPI.Models.BodyPartType", b =>
+            modelBuilder.Entity("Data.Models.BodyPartType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -134,7 +135,31 @@ namespace AnnotateAPI.Migrations
                     b.ToTable("BodyPartTypes");
                 });
 
-            modelBuilder.Entity("AnnotateAPI.Models.Picture", b =>
+            modelBuilder.Entity("Data.Models.Coordinate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AnnotationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("X")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Y")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AnnotationId");
+
+                    b.ToTable("Coordinates");
+                });
+
+            modelBuilder.Entity("Data.Models.Picture", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -285,18 +310,39 @@ namespace AnnotateAPI.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("AnnotateAPI.Models.Annotation", b =>
+            modelBuilder.Entity("Data.Models.Annotation", b =>
                 {
-                    b.HasOne("AnnotateAPI.Models.AppUser", "Author")
+                    b.HasOne("Data.Models.AppUser", "Author")
                         .WithMany()
-                        .HasForeignKey("AuthorId");
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Data.Models.Picture", "Picture")
+                        .WithMany()
+                        .HasForeignKey("PictureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Author");
+
+                    b.Navigation("Picture");
                 });
 
-            modelBuilder.Entity("AnnotateAPI.Models.Picture", b =>
+            modelBuilder.Entity("Data.Models.Coordinate", b =>
                 {
-                    b.HasOne("AnnotateAPI.Models.BodyPartType", "BodyPartType")
+                    b.HasOne("Data.Models.Annotation", "Annotation")
+                        .WithMany("Coordinates")
+                        .HasForeignKey("AnnotationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Annotation");
+                });
+
+            modelBuilder.Entity("Data.Models.Picture", b =>
+                {
+                    b.HasOne("Data.Models.BodyPartType", "BodyPartType")
                         .WithMany()
                         .HasForeignKey("BodyPartTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -316,7 +362,7 @@ namespace AnnotateAPI.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("AnnotateAPI.Models.AppUser", null)
+                    b.HasOne("Data.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -325,7 +371,7 @@ namespace AnnotateAPI.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("AnnotateAPI.Models.AppUser", null)
+                    b.HasOne("Data.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -340,7 +386,7 @@ namespace AnnotateAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AnnotateAPI.Models.AppUser", null)
+                    b.HasOne("Data.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -349,11 +395,16 @@ namespace AnnotateAPI.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("AnnotateAPI.Models.AppUser", null)
+                    b.HasOne("Data.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Data.Models.Annotation", b =>
+                {
+                    b.Navigation("Coordinates");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,13 +1,12 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using NetTopologySuite.Geometries;
 
 #nullable disable
 
-namespace AnnotateAPI.Migrations
+namespace Data.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -83,26 +82,6 @@ namespace AnnotateAPI.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Annotations",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AuthorId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    Polygon = table.Column<Polygon>(type: "geography", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Annotations", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Annotations_AspNetUsers_AuthorId",
-                        column: x => x.AuthorId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -209,10 +188,63 @@ namespace AnnotateAPI.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Annotations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AuthorId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PictureId = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Annotations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Annotations_AspNetUsers_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Annotations_Pictures_PictureId",
+                        column: x => x.PictureId,
+                        principalTable: "Pictures",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Coordinates",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AnnotationId = table.Column<int>(type: "int", nullable: false),
+                    X = table.Column<int>(type: "int", nullable: false),
+                    Y = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Coordinates", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Coordinates_Annotations_AnnotationId",
+                        column: x => x.AnnotationId,
+                        principalTable: "Annotations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Annotations_AuthorId",
                 table: "Annotations",
                 column: "AuthorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Annotations_PictureId",
+                table: "Annotations",
+                column: "PictureId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -254,6 +286,11 @@ namespace AnnotateAPI.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Coordinates_AnnotationId",
+                table: "Coordinates",
+                column: "AnnotationId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Pictures_BodyPartTypeId",
                 table: "Pictures",
                 column: "BodyPartTypeId");
@@ -262,9 +299,6 @@ namespace AnnotateAPI.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Annotations");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -281,13 +315,19 @@ namespace AnnotateAPI.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Pictures");
+                name: "Coordinates");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "Annotations");
+
+            migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Pictures");
 
             migrationBuilder.DropTable(
                 name: "BodyPartTypes");

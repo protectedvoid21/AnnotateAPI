@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Folder Include="Annotations\" />
+    <Folder Include="Pictures\" />
   </ItemGroup>
 
   <ItemGroup>

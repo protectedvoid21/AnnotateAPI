@@ -1,6 +1,4 @@
-﻿using NetTopologySuite.Geometries;
-
-namespace Data.Models;
+﻿namespace Data.Models;
 
 public class Annotation {
     public int Id { get; set; }
@@ -8,7 +6,7 @@ public class Annotation {
     public string AuthorId { get; set; }
     public AppUser Author { get; set; }
     
-    public Polygon Polygon { get; set; }
+    public List<Coordinate> Coordinates { get; set; }
 
     public int PictureId { get; set; }
     public Picture Picture { get; set; }
