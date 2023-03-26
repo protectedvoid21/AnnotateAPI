@@ -14,13 +14,23 @@ public class AnnotationController : ControllerBase {
         this.annotationService = annotationService;
     }
 
-    [HttpGet(Name = "GetAll")]
-    public async Task<IEnumerable<Annotation>> GetAll(int pictureId) {
+    [HttpGet]
+    public async Task<IEnumerable<Annotation>> Get(int pictureId) {
         return await annotationService.GetAllForPicture(pictureId);
     }
 
-    [HttpPost(Name = "Add")]
+    [HttpPost]
     public async Task Add([FromBody] AnnotationDto annotationDto) {
         await annotationService.AddAsync(annotationDto.AuthorId, annotationDto.PictureId, annotationDto.Description, annotationDto.Coordinates);
+    }
+
+    [HttpPut]
+    public async Task Update([FromBody] AnnotationEditDto annotationDto) {
+        await annotationService.UpdateAsync(annotationDto.Id, annotationDto.Description, annotationDto.Coordinates);
+    }
+
+    [HttpDelete]
+    public async Task Delete(int id) {
+        await annotationService.DeleteAsync(id);
     }
 }
