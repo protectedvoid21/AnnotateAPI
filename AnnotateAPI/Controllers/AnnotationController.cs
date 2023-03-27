@@ -57,7 +57,7 @@ public class AnnotationController : ControllerBase {
         annotation.Description = annotationDto.Description;
         dbContext.RemoveRange(annotation.Coordinates);
 
-        annotation.Coordinates = annotationDto.Coordinates.Select(c => new Coordinate { AnnotationId = id, X = c.Item1, Y = c.Item2 }).ToList();
+        annotation.Coordinates = annotationDto.Coordinates.Select(c => new Coordinate { AnnotationId = annotation.Id, X = c.Item1, Y = c.Item2 }).ToList();
 
         dbContext.Update(annotation);
         await dbContext.SaveChangesAsync();
