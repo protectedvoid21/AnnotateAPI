@@ -2,7 +2,6 @@
 using Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Services.Annotations;
 
 namespace AnnotateAPI.Controllers;
 

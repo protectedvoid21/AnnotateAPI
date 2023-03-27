@@ -1,6 +1,5 @@
 ﻿using Data.Models;
 using Microsoft.AspNetCore.Mvc;
-using Services.Pictures;
 
 namespace AnnotateAPI.Controllers;
 
