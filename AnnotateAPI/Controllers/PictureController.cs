@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AnnotateAPI.Controllers;
 
 [ApiController]
-[Route("/picture")]
+[Route("api/[controller]")]
 public class PictureController : ControllerBase {
     private readonly AnnotateDbContext dbContext;
 
@@ -15,13 +15,13 @@ public class PictureController : ControllerBase {
     
     [HttpGet]
     public async Task<IActionResult> GetById(int id) {
-        Annotation annotation = await dbContext.Annotations.FindAsync(id);
+        Picture picture = await dbContext.Pictures.FindAsync(id);
 
-        if (annotation == null) {
+        if (picture == null) {
             return NotFound();
         }
 
-        return Ok(annotation);
+        return Ok(picture);
     }
 
     [HttpPost]

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace AnnotateAPI.Controllers;
 
 [ApiController]
-[Route("annotation/")]
+[Route("api/[controller]")]
 public class AnnotationController : ControllerBase {
     private AnnotateDbContext dbContext;
 
