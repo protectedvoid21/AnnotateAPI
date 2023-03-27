@@ -16,13 +16,19 @@ public class AnnotationController : ControllerBase {
     }
 
     [HttpGet]
-    public async Task<IEnumerable<Annotation>> Get(int pictureId) {
-        return dbContext.Annotations.Where(a => a.PictureId == pictureId)
+    public async Task<IActionResult> Get(int pictureId) {
+        IEnumerable<Annotation> annotations = dbContext.Annotations.Where(a => a.PictureId == pictureId)
             .Include(a => a.Coordinates);
+
+        if (!annotations.Any()) {
+            return NotFound();
+        }
+
+        return Ok(annotations);
     }
 
     [HttpPost]
-    public async Task Add([FromBody] AnnotationDto annotationDto) {
+    public async Task<IActionResult> Add([FromBody] AnnotationDto annotationDto) {
         Annotation annotation = new() {
             AuthorId = annotationDto.AuthorId,
             PictureId = annotationDto.PictureId,
@@ -37,14 +43,16 @@ public class AnnotationController : ControllerBase {
 
         await dbContext.AddAsync(annotation);
         await dbContext.SaveChangesAsync();
+
+        return Ok();
     }
 
     [HttpPut]
-    public async Task Update([FromBody] AnnotationEditDto annotationDto) {
-        Annotation annotation = await dbContext.Annotations.FindAsync(id);
+    public async Task<IActionResult> Update([FromBody] AnnotationEditDto annotationDto) {
+        Annotation annotation = await dbContext.Annotations.FindAsync(annotationDto.Id);
 
         if(annotation == null) {
-            return;
+            return NotFound();
         }
 
         annotation.Description = annotationDto.Description;
@@ -54,17 +62,21 @@ public class AnnotationController : ControllerBase {
 
         dbContext.Update(annotation);
         await dbContext.SaveChangesAsync();
+
+        return Ok();
     }
 
     [HttpDelete]
-    public async Task Delete(int id) {
+    public async Task<IActionResult> Delete(int id) {
         Annotation annotation = await dbContext.Annotations.FindAsync(id);
 
         if(annotation == null) {
-            return;
+            return NotFound();
         }
 
         dbContext.Remove(annotation);
         await dbContext.SaveChangesAsync();
+
+        return Ok();
     }
 }
