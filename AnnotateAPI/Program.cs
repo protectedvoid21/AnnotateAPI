@@ -4,8 +4,6 @@ using AnnotateAPI.Extensions;
 using Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Services.Annotations;
-using Services.Pictures;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,10 +19,6 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options => {
     options.User.RequireUniqueEmail = true;
 }).AddEntityFrameworkStores<AnnotateDbContext>();
 
-builder.Services.AddTransient<IPictureService, PictureService>();
-builder.Services.AddTransient<IAnnotationService, AnnotationService>();
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

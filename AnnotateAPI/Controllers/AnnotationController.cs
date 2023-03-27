@@ -28,6 +28,10 @@ public class AnnotationController : ControllerBase {
 
     [HttpPost]
     public async Task<IActionResult> Add([FromBody] AnnotationDto annotationDto) {
+        if (!ModelState.IsValid) {
+            return BadRequest(ModelState);
+        }
+
         Annotation annotation = new() {
             AuthorId = annotationDto.AuthorId,
             PictureId = annotationDto.PictureId,
@@ -48,6 +52,10 @@ public class AnnotationController : ControllerBase {
 
     [HttpPut]
     public async Task<IActionResult> Update([FromBody] AnnotationEditDto annotationDto) {
+        if (!ModelState.IsValid) {
+            return BadRequest(ModelState);
+        }
+
         Annotation annotation = await dbContext.Annotations.FindAsync(annotationDto.Id);
 
         if(annotation == null) {
