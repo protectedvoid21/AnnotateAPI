@@ -8,7 +8,7 @@ public static class IApplicationBuilderExtensions {
         using var dbContext = serviceScope.ServiceProvider.GetRequiredService<AnnotateDbContext>();
 
         new MainSeeder()
-            .Seed(dbContext)
+            .Seed(dbContext, serviceScope.ServiceProvider)
             .GetAwaiter()
             .GetResult();
 

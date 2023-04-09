@@ -37,12 +37,22 @@ public class DatasetController : ControllerBase {
         if (!ModelState.IsValid) {
             return BadRequest(datasetDto);
         }
-        
+
         PictureDataset dataset = new() {
             CreateDate = DateTime.Now,
-            Annotators = dbContext.Users.
-            PictureIds = datasetDto.PictureIds
         };
+
+        List<PictureDatasetUser> pictureDatasetUserList = new();
+        foreach (var userId in datasetDto.UserIds) {
+            pictureDatasetUserList.AddRange(datasetDto.PictureIds.Select(p => new PictureDatasetUser {
+                AnnotatorId = userId,
+                PictureId = p,
+                AnnotationStatus = new AnnotationStatus { PictureId = p },
+                PictureDataset = dataset
+            }));
+        }
+
+        dataset.PictureDatasetUsers = pictureDatasetUserList;
 
         await dbContext.AddAsync(dataset);
         await dbContext.SaveChangesAsync();

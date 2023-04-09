@@ -1,7 +1,7 @@
 ﻿namespace AnnotateAPI.Seeders; 
 
 public class MainSeeder : ISeeder {
-    public async Task Seed(AnnotateDbContext dbContext) {
+    public async Task Seed(AnnotateDbContext dbContext, IServiceProvider serviceProvider) {
         if(dbContext == null) {
             throw new ArgumentNullException(nameof(dbContext));
         }
@@ -13,7 +13,7 @@ public class MainSeeder : ISeeder {
         };
 
         foreach (var seeder in seeders) {
-            await seeder.Seed(dbContext);
+            await seeder.Seed(dbContext, serviceProvider);
             await dbContext.SaveChangesAsync();
         }
     }

@@ -1,15 +1,31 @@
+using System.Text;
 using System.Text.Json.Serialization;
 using AnnotateAPI;
 using AnnotateAPI.Extensions;
 using Data.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers().AddJsonOptions(x => {
     x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options => {
+        options.TokenValidationParameters = new TokenValidationParameters {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        };
+    });
+
 builder.Services.AddDbContext<AnnotateDbContext>(options => {
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
 });
@@ -33,6 +49,7 @@ if(app.Environment.IsDevelopment()) {
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -5,19 +5,19 @@ using Microsoft.EntityFrameworkCore;
 namespace AnnotateAPI.Seeders;
 
 public class UserSeeder : ISeeder {
-    public async Task Seed(AnnotateDbContext dbContext) {
+    public async Task Seed(AnnotateDbContext dbContext, IServiceProvider serviceProvider) {
+        var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
+
         IEnumerable<AppUser> users = new[] {
-            new AppUser { Email = "test@asd.com", UserName = "User1", PasswordHash = "Password"},
-            new AppUser { Email = "other@asd.com", UserName = "User2", PasswordHash = "Password"},
-            new AppUser { Email = "expert@asd.com", UserName = "User3", PasswordHash = "Password"}
+            new AppUser { Email = "test@asd.com", UserName = "User1"},
+            new AppUser { Email = "other@asd.com", UserName = "User2"},
+            new AppUser { Email = "expert@asd.com", UserName = "User3"}
         };
 
         foreach (var user in users) {
-            if (!await dbContext.Users.AnyAsync(u => u.Email.Equals(user.Email))) {
-                await dbContext.AddAsync(user);
+            if(await userManager.FindByEmailAsync(user.Email) == null) { 
+                await userManager.CreateAsync(user, "Password123");
             }
         }
-
-        await dbContext.SaveChangesAsync();
     }
 }

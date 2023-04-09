@@ -3,7 +3,7 @@
 namespace AnnotateAPI.Seeders; 
 
 public class PictureSeeder : ISeeder {
-    public async Task Seed(AnnotateDbContext dbContext) {
+    public async Task Seed(AnnotateDbContext dbContext, IServiceProvider serviceProvider) {
         IEnumerable<Picture> pictures = new[] {
             new Picture { Name = "Liver1231231"  ,BodyPartTypeId = 1, Description = "Liver picture, very bad"},
             new Picture { Name = "Left_lung84024"  ,BodyPartTypeId = 2 },
@@ -16,6 +16,5 @@ public class PictureSeeder : ISeeder {
         var picturesToAdd = pictures.Except(dbContext.Pictures);
 
         await dbContext.AddRangeAsync(picturesToAdd);
-        await dbContext.SaveChangesAsync();
     }
 }

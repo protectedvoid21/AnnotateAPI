@@ -3,7 +3,7 @@
 namespace AnnotateAPI.Seeders; 
 
 public class BodyPartTypeSeeder : ISeeder {
-    public async Task Seed(AnnotateDbContext dbContext) {
+    public async Task Seed(AnnotateDbContext dbContext, IServiceProvider serviceProvider) {
         IEnumerable<string> bodyPartTypeNames = new[] {
             "Liver", "Lungs", "Stomach", "Spleen", "Intestine", "Heart", "Bladder", "Pancreas", "Thyroid"
         };
@@ -13,6 +13,5 @@ public class BodyPartTypeSeeder : ISeeder {
         IEnumerable<BodyPartType> bodyParts = bodyPartsToAdd.Select(b => new BodyPartType{ Name = b });
 
         await dbContext.AddRangeAsync(bodyParts);
-        await dbContext.SaveChangesAsync();
     }
 }

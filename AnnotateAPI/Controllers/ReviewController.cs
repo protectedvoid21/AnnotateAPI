@@ -1,12 +1,14 @@
 ﻿using AnnotateAPI.Dtos;
 using Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AnnotateAPI.Controllers;
 
 [ApiController]
-[Route("api/'review")]
+[Authorize]
+[Route("api/review")]
 public class ReviewController : ControllerBase {
     private readonly AnnotateDbContext dbContext;
     private readonly UserManager<AppUser> userManager;
@@ -18,7 +20,7 @@ public class ReviewController : ControllerBase {
 
     [HttpGet]
     public async Task<IActionResult> Get(int annotationId) {
-        var review = await dbContext.AnnotationReviews.FindAsync();
+        var review = await dbContext.AnnotationReviews.FindAsync(annotationId);
 
         if (review == null) {
             return NotFound();
