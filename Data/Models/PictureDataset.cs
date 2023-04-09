@@ -5,5 +5,5 @@ public class PictureDataset {
 
     public DateTime CreateDate { get; set; }
 
-    public IEnumerable<Picture> Picture { get; set; }
+    public List<PictureDatasetUser> PictureDatasetUsers { get; set; }
 }

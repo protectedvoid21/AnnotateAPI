@@ -24,11 +24,11 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Models.Annotation", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("AuthorId")
                         .IsRequired()
@@ -41,6 +41,9 @@ namespace Data.Migrations
                     b.Property<int>("PictureId")
                         .HasColumnType("int");
 
+                    b.Property<int>("SurenessPercent")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AuthorId");
@@ -48,6 +51,29 @@ namespace Data.Migrations
                     b.HasIndex("PictureId");
 
                     b.ToTable("Annotations");
+                });
+
+            modelBuilder.Entity("Data.Models.AnnotationReview", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<long>("AnnotationId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ExpertId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AnnotationId");
+
+                    b.HasIndex("ExpertId");
+
+                    b.ToTable("AnnotationReviews");
                 });
 
             modelBuilder.Entity("Data.Models.AppUser", b =>
@@ -134,14 +160,14 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Models.Coordinate", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<int>("AnnotationId")
-                        .HasColumnType("int");
+                    b.Property<long>("AnnotationId")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("X")
                         .HasColumnType("int");
@@ -177,11 +203,32 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("PictureDatasetId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("BodyPartTypeId");
 
+                    b.HasIndex("PictureDatasetId");
+
                     b.ToTable("Pictures");
+                });
+
+            modelBuilder.Entity("Data.Models.PictureDataset", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PictureDatasets");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -336,6 +383,23 @@ namespace Data.Migrations
                     b.Navigation("Picture");
                 });
 
+            modelBuilder.Entity("Data.Models.AnnotationReview", b =>
+                {
+                    b.HasOne("Data.Models.Annotation", "Annotation")
+                        .WithMany()
+                        .HasForeignKey("AnnotationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Data.Models.AppUser", "Expert")
+                        .WithMany("AnnotationReviews")
+                        .HasForeignKey("ExpertId");
+
+                    b.Navigation("Annotation");
+
+                    b.Navigation("Expert");
+                });
+
             modelBuilder.Entity("Data.Models.Coordinate", b =>
                 {
                     b.HasOne("Data.Models.Annotation", "Annotation")
@@ -354,6 +418,10 @@ namespace Data.Migrations
                         .HasForeignKey("BodyPartTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Data.Models.PictureDataset", null)
+                        .WithMany("Picture")
+                        .HasForeignKey("PictureDatasetId");
 
                     b.Navigation("BodyPartType");
                 });
@@ -412,6 +480,16 @@ namespace Data.Migrations
             modelBuilder.Entity("Data.Models.Annotation", b =>
                 {
                     b.Navigation("Coordinates");
+                });
+
+            modelBuilder.Entity("Data.Models.AppUser", b =>
+                {
+                    b.Navigation("AnnotationReviews");
+                });
+
+            modelBuilder.Entity("Data.Models.PictureDataset", b =>
+                {
+                    b.Navigation("Picture");
                 });
 #pragma warning restore 612, 618
         }

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(AnnotateDbContext))]
-    [Migration("20230408173018_AddReviews")]
+    [Migration("20230408175305_AddReviews")]
     partial class AddReviews
     {
         /// <inheritdoc />
@@ -68,7 +68,6 @@ namespace Data.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("ExpertId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -396,10 +395,8 @@ namespace Data.Migrations
                         .IsRequired();
 
                     b.HasOne("Data.Models.AppUser", "Expert")
-                        .WithMany()
-                        .HasForeignKey("ExpertId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("AnnotationReviews")
+                        .HasForeignKey("ExpertId");
 
                     b.Navigation("Annotation");
 
@@ -486,6 +483,11 @@ namespace Data.Migrations
             modelBuilder.Entity("Data.Models.Annotation", b =>
                 {
                     b.Navigation("Coordinates");
+                });
+
+            modelBuilder.Entity("Data.Models.AppUser", b =>
+                {
+                    b.Navigation("AnnotationReviews");
                 });
 
             modelBuilder.Entity("Data.Models.PictureDataset", b =>

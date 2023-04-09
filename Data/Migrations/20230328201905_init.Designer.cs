@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(AnnotateDbContext))]
-    [Migration("20230327170313_AddDescToPicture")]
-    partial class AddDescToPicture
+    [Migration("20230328201905_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,11 +27,11 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Models.Annotation", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("AuthorId")
                         .IsRequired()
@@ -137,14 +137,14 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Models.Coordinate", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<int>("AnnotationId")
-                        .HasColumnType("int");
+                    b.Property<long>("AnnotationId")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("X")
                         .HasColumnType("int");

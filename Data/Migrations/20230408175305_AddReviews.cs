@@ -30,7 +30,7 @@ namespace Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ExpertId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ExpertId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     AnnotationId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
@@ -46,8 +46,7 @@ namespace Data.Migrations
                         name: "FK_AnnotationReviews_AspNetUsers_ExpertId",
                         column: x => x.ExpertId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
