@@ -15,11 +15,15 @@ namespace AnnotateAPI.Controllers;
 public class UserController : Controller {
     private readonly UserManager<AppUser> userManager;
     private readonly string jwtKey;
+    private readonly string audience;
+    private readonly string issuer;
 
     public UserController(UserManager<AppUser> userManager,  
         IConfiguration configuration) {
         this.userManager = userManager;
-        jwtKey = configuration["jwt:Key"];
+        jwtKey = configuration["Jwt:Key"];
+        audience = configuration["Jwt:Audience"];
+        issuer = configuration["Jwt:Issuer"];
     }
 
     [HttpPost]
@@ -34,8 +38,10 @@ public class UserController : Controller {
         var tokenDescriptor = new SecurityTokenDescriptor {
             Subject = new ClaimsIdentity(new[] {
                 new Claim(ClaimTypes.Name, user.Id),
-                new Claim(ClaimTypes.Role, "user")
+                new Claim(ClaimTypes.Email, user.Email) 
             }),
+            Audience = audience,
+            Issuer = issuer,
             Expires = DateTime.Now.AddHours(1),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };

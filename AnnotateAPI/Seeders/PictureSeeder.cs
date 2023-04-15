@@ -1,4 +1,5 @@
 ﻿using Data.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace AnnotateAPI.Seeders; 
 
@@ -13,7 +14,7 @@ public class PictureSeeder : ISeeder {
             new Picture { Name = "Stomach89754 #3" ,BodyPartTypeId = 3 },
         };
 
-        var picturesToAdd = pictures.Except(dbContext.Pictures);
+        var picturesToAdd = pictures.ExceptBy(dbContext.Pictures.Select(p => p.Name), p => p.Name);
 
         await dbContext.AddRangeAsync(picturesToAdd);
     }

@@ -1,9 +1,11 @@
 ﻿using AnnotateAPI.Dtos;
 using Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AnnotateAPI.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class PictureController : ControllerBase {

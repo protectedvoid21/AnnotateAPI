@@ -1,11 +1,13 @@
 ﻿using AnnotateAPI.Dtos;
 using Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AnnotateAPI.Controllers; 
 
 [Route("api/[controller]")]
+[Authorize]
 [ApiController]
 public class BodyPartController : ControllerBase {
     private readonly AnnotateDbContext dbContext;
