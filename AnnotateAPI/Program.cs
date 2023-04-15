@@ -26,21 +26,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options => {
     options.User.RequireUniqueEmail = true;
 }).AddEntityFrameworkStores<AnnotateDbContext>();
 
-builder.Services.AddAuthentication(authOptions => {
-    authOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    authOptions.DefaultChallengeScheme= JwtBearerDefaults.AuthenticationScheme;
-    authOptions.DefaultScheme= JwtBearerDefaults.AuthenticationScheme;
-    }).AddJwtBearer(options => {
-        options.TokenValidationParameters = new TokenValidationParameters {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
-            ValidateIssuer = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidateAudience = true,
-            ValidateLifetime = false,
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-        };
-});
+builder.Services.AddJwtAuthentication(builder.Configuration["Jwt:Key"], builder.Configuration["Jwt:Issuer"], builder.Configuration["Jwt:Audience"]);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c => {
